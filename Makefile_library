@@ -1,0 +1,4 @@
+libRailways:
+	g++ -c Railways.cpp -o Railways.o
+	ar rcs libRailways.a Railways.o
+	
