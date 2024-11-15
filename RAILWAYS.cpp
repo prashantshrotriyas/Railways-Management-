@@ -375,71 +375,88 @@ void R_Manager::addStation()
 void R_Manager::scheduleTrain()
 {
     int type;
-  cout << "\nSchedule a train (choose station ID type):" << endl;
-  cout << "1. Integer ID\n2. String ID" << endl;
-  cin >> type;
+    cout << "\nSchedule a train (choose station ID type):" << endl;
+    cout << "1. Integer ID\n2. String ID" << endl;
+    cin >> type;
 
-  if (type == 1 && !intStations.empty())
-  {
-    int stationID;
-    cout << "Enter Station ID: ";
-    cin >> stationID;
-
-    for (auto &station : intStations)
+    if (type == 1 && !intStations.empty())
     {
-      if (station.get_st_id() == stationID)
-      {
-        string pt_id, t_name, timing;
-        int stoppage;
+        int stationID;
+        cout << "Enter Station ID: ";
+        cin >> stationID;
 
-        cout << "Enter Platform ID: ";
-        cin >> pt_id;
-        cout << "Enter Train Name: ";
-        cin >> t_name;
-        cout << "Enter Train Timing (hh:mm): ";
-        cin >> timing;
-        cout << "Is this a stopping train (1) or through train (0)? ";
-        cin >> stoppage;
+        for (auto &station : intStations)
+        {
+            if (station.get_st_id() == stationID)
+            {
+                string pt_id, t_name, timing;
+                int stoppage;
 
-        station.schedule_train(pt_id, timing, t_name, stoppage);
-        return;
-      }
+                cout << "Enter Platform ID: ";
+                cin >> pt_id;
+                cout << "Enter Train Name: ";
+                cin >> t_name;
+                cout << "Enter Train Timing (hh:mm): ";
+                cin >> timing;
+                cout << "Is this a stopping train (1) or through train (0)? ";
+                cin >> stoppage;
+
+                station.schedule_train(pt_id, timing, t_name, stoppage);
+                return;
+            }
+        }
+        cout << "Station not found.\n";
     }
-    cout << "Station not found.\n";
-  }
-  else if (type == 2 && !stringStations.empty())
-  {
-    string stationID;
-    cout << "Enter Station ID: ";
-    cin >> stationID;
-
-    for (auto &station : stringStations)
+    else if (type == 2 && !stringStations.empty())
     {
-      if (station.get_st_id() == stationID)
-      {
-        string pt_id, t_name, timing;
-        int stoppage;
+        string stationID;
+        cout << "Enter Station ID: ";
+        cin >> stationID;
 
-        cout << "Enter Platform ID: ";
-        cin >> pt_id;
-        cout << "Enter Train Name: ";
-        cin >> t_name;
-        cout << "Enter Train Timing (hh:mm): ";
-        cin >> timing;
-        cout << "Is this a stopping train (1) or through train (0)? ";
-        cin >> stoppage;
+        for (auto &station : stringStations)
+        {
+            if (station.get_st_id() == stationID)
+            {
+                string pt_id, t_name, timing;
+                int stoppage;
 
-        station.schedule_train(pt_id, timing, t_name, stoppage);
-        return;
-      }
+                cout << "Enter Platform ID: ";
+                cin >> pt_id;
+                cout << "Enter Train Name: ";
+                cin >> t_name;
+                try
+                {   
+                    cout << "Enter Train Timing (hh:mm): ";
+                    cin >> timing;
+                    // Check if the entered time is in the correct format (hh:mm)
+                    if (timing.length() != 5 || timing[2] != ':' ||
+                        !isdigit(timing[0]) || !isdigit(timing[1]) ||
+                        !isdigit(timing[3]) || !isdigit(timing[4]))
+                    {
+                        throw invalid_argument("Invalid time format! Please enter the time as hh:mm.");
+                    }
+                }
+                catch (const invalid_argument &e)
+                {
+
+                    cout << e.what() << endl;
+                    return;
+                }
+                cout << "Is this a stopping train (1) or through train (0)? ";
+                cin >> stoppage;
+
+                station.schedule_train(pt_id, timing, t_name, stoppage);
+                return;
+            }
+        }
+        cout << "Station not found.\n";
     }
-    cout << "Station not found.\n";
-  }
-  else
-  {
-    cout << "No stations available or invalid option selected.\n";
-  }
+    else
+    {
+        cout << "No stations available or invalid option selected.\n";
+    }
 }
+
 
 template class station<int>;
 template class station<string>;
