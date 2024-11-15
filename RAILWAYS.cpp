@@ -6,15 +6,13 @@ using namespace std;
 
 // line class
 void line::set_line_id(string id)
-{   
+{
     line_id = id;
-
-    
 }
 
 string line::get_line_id()
-{   
-    
+{
+
     return line_id;
 }
 
@@ -32,7 +30,7 @@ string platform::get_pt_id()
 
 void platform::print_pt_lines()
 {
-        cout <<  pt_lines.get_line_id() << endl;
+    cout << pt_lines.get_line_id() << endl;
 }
 line platform::get_pt_lines()
 {
@@ -40,7 +38,7 @@ line platform::get_pt_lines()
 }
 void platform::set_pt_lines(string id)
 {
-    
+
     pt_lines.set_line_id(id);
 }
 
@@ -84,7 +82,6 @@ void station<T>::printpltfrm()
         cout << pt.get_pt_id() << endl;
 }
 
-
 template <class T>
 void station<T>::setpltfrm(string id)
 {
@@ -108,9 +105,8 @@ void station<T>::setlines(string id)
     st_lines.push_back(temp);
 }
 
-
 template <class T>
-void station<T>::alloc_ln_Plt(string ln_id, string pt_id)
+int station<T>::alloc_ln_Plt(string ln_id, string pt_id)
 {
     // Check if this line and platform exist in this station
 
@@ -134,35 +130,39 @@ void station<T>::alloc_ln_Plt(string ln_id, string pt_id)
     if (plt_flag == 0)
     {
         cout << "This platform does not exist in this station" << endl;
-        return;
+        return -1;
     }
 
     if (ln_flag == 0)
     {
         cout << "This line does not exist in this station" << endl;
-        return;
+        return -1;
     }
 
     for (auto pt : pltfrm)
     {
-       
-            if (pt.get_pt_lines().get_line_id() == ln_id)
-            {
-                cout << "Single line can not belong to multiple platforms " << endl;
-                cout << "line " << ln_id << " belongs to platform " << pt.get_pt_id() << endl;
-                return;
-            }
+
+        if (pt.get_pt_lines().get_line_id() == ln_id)
+        {
+            cout << "Single line can not belong to multiple platforms " << endl;
+            cout << "line " << ln_id << " belongs to platform " << pt.get_pt_id() << endl;
+            return -1;
+        }
     }
 
     for (auto &pt : pltfrm)
         if (pt.get_pt_id() == pt_id)
-        {   
-            if(pt.get_pt_lines().get_line_id()=="")
-            pt.set_pt_lines(ln_id);
+        {
+            if (pt.get_pt_lines().get_line_id() == "")
+                pt.set_pt_lines(ln_id);
             else
-            cout<<"A platform has only single line !!";
-
+            {
+                cout << "A platform has only single line !!";
+                return -1;
+            }
         }
+
+    return 1;
 }
 
 template <class T>
@@ -171,25 +171,22 @@ void station<T>::print_line_plt()
     for (auto pt : pltfrm)
     {
         cout << "Platform is: " << pt.get_pt_id();
-        cout << " with line -> " << pt.get_pt_lines().get_line_id() <<endl;
-       
+        cout << " with line -> " << pt.get_pt_lines().get_line_id() << endl;
     }
 }
 
 template <class T>
 void station<T>::show_station()
 {
-      cout<<"The details of Station "<<st_name<<" is :"<<endl;
-      cout<<"It has following lines :"<<endl;
-      printlines();
+    cout << "The details of Station " << st_name << " is :" << endl;
+    cout << "It has following lines :" << endl;
+    printlines();
 
-      cout<<"It has following platforms :"<<endl;
-      printpltfrm();
+    cout << "It has following platforms :" << endl;
+    printpltfrm();
 
-      print_line_plt();
-
+    print_line_plt();
 }
-
 
 template <class T>
 void station<T>::schedule_train(string pt_id, string time, string tname, int stoppage)
@@ -223,7 +220,7 @@ void station<T>::schedule_train(string pt_id, string time, string tname, int sto
                 }
             }
 
-            if ((pt.get_schedule().begin() != pt.get_schedule().end())&&(it != pt.get_schedule().begin()))
+            if ((pt.get_schedule().begin() != pt.get_schedule().end()) && (it != pt.get_schedule().begin()))
             {
 
                 auto prev_it = std::prev(it);
@@ -275,102 +272,101 @@ void R_Manager::viewStations()
 {
     cout << "\nAvailable stations:" << endl;
 
-  
-  for (size_t i = 0; i < intStations.size(); ++i)
-  {
-    cout << i + 1 << ". Station ID (int): " << intStations[i].get_st_id()
-         << ", Station Name: " << intStations[i].get_st_name() << endl;
-          intStations[i].show_station();
-  }
+    for (size_t i = 0; i < intStations.size(); ++i)
+    {
+        cout << i + 1 << ". Station ID (int): " << intStations[i].get_st_id()
+             << ", Station Name: " << intStations[i].get_st_name() << endl;
+        intStations[i].show_station();
+    }
 
-
-  for (size_t i = 0; i < stringStations.size(); ++i)
-  {
-    cout << intStations.size() + i + 1 << ". Station ID (string): "
-         << stringStations[i].get_st_id()
-         << ", Station Name: " << stringStations[i].get_st_name() << endl;
-         intStations[i].show_station();
-  }
+    for (size_t i = 0; i < stringStations.size(); ++i)
+    {
+        cout << intStations.size() + i + 1 << ". Station ID (string): "
+             << stringStations[i].get_st_id()
+             << ", Station Name: " << stringStations[i].get_st_name() << endl;
+        intStations[i].show_station();
+    }
 }
 void R_Manager::addStation()
 {
     int type;
-  cout << "\nAdd a new station (choose ID type):" << endl;
-  cout << "1. Integer ID\n2. String ID" << endl;
-  cin >> type;
+    cout << "\nAdd a new station (choose ID type):" << endl;
+    cout << "1. Integer ID\n2. String ID" << endl;
+    cin >> type;
 
-  if (type == 1)
-  {
-    station<int> newStation;
-    int st_id;
-    string st_name;
-
-    cout << "Enter Station ID (integer): ";
-    cin >> st_id;
-    cout << "Enter Station Name: ";
-    cin >> st_name;
-
-    newStation.set_st_id(st_id);
-    newStation.set_st_name(st_name);
-
-    int numPlatforms;
-    cout << "Enter the number of platforms: ";
-    cin >> numPlatforms;
-
-    for (int i = 0; i < numPlatforms; ++i)
+    if (type == 1)
     {
-      string platform_id, line_id;
-      cout << "Enter Platform " << i + 1 << " ID: ";
-      cin >> platform_id;
-      cout << "Enter corresponding Line " << i + 1 << " ID: ";
-      cin >> line_id;
+        station<int> newStation;
+        int st_id;
+        string st_name;
 
-      newStation.setpltfrm(platform_id);
-      newStation.setlines(line_id);
-      newStation.alloc_ln_Plt(line_id, platform_id);
+        cout << "Enter Station ID (integer): ";
+        cin >> st_id;
+        cout << "Enter Station Name: ";
+        cin >> st_name;
+
+        newStation.set_st_id(st_id);
+        newStation.set_st_name(st_name);
+
+        int numPlatforms;
+        cout << "Enter the number of platforms: ";
+        cin >> numPlatforms;
+
+        for (int i = 0; i < numPlatforms; ++i)
+        {
+            string platform_id, line_id;
+            cout << "Enter Platform " << i + 1 << " ID: ";
+            cin >> platform_id;
+            cout << "Enter corresponding Line " << i + 1 << " ID: ";
+            cin >> line_id;
+
+            newStation.setpltfrm(platform_id);
+            newStation.setlines(line_id);
+            newStation.alloc_ln_Plt(line_id, platform_id);
+        }
+
+        intStations.push_back(newStation);
     }
-
-    intStations.push_back(newStation);
-    cout << "Station added successfully!\n";
-  }
-  else if (type == 2)
-  {
-    station<string> newStation;
-    string st_id, st_name;
-
-    cout << "Enter Station ID (string): ";
-    cin >> st_id;
-    cout << "Enter Station Name: ";
-    cin >> st_name;
-
-    newStation.set_st_id(st_id);
-    newStation.set_st_name(st_name);
-
-    int numPlatforms;
-    cout << "Enter the number of platforms: ";
-    cin >> numPlatforms;
-
-    for (int i = 0; i < numPlatforms; ++i)
+    else if (type == 2)
     {
-      string platform_id, line_id;
-      cout << "Enter Platform " << i + 1 << " ID: ";
-      cin >> platform_id;
-      cout << "Enter corresponding Line " << i + 1 << " ID: ";
-      cin >> line_id;
+        station<string> newStation;
+        string st_id, st_name;
 
-      newStation.setpltfrm(platform_id);
-      newStation.setlines(line_id);
-      newStation.alloc_ln_Plt(line_id, platform_id);
+        cout << "Enter Station ID (string): ";
+        cin >> st_id;
+        cout << "Enter Station Name: ";
+        cin >> st_name;
+
+        newStation.set_st_id(st_id);
+        newStation.set_st_name(st_name);
+
+        int numPlatforms;
+        cout << "Enter the number of platforms: ";
+        cin >> numPlatforms;
+
+        int check = -1;
+        for (int i = 0; i < numPlatforms; ++i)
+        {
+            string platform_id, line_id;
+            cout << "Enter Platform " << i + 1 << " ID: ";
+            cin >> platform_id;
+            cout << "Enter corresponding Line " << i + 1 << " ID: ";
+            cin >> line_id;
+
+            newStation.setpltfrm(platform_id);
+            newStation.setlines(line_id);
+            check = newStation.alloc_ln_Plt(line_id, platform_id);
+        }
+        if (check == 1)
+        {
+            stringStations.push_back(newStation);
+            cout << "Station added Successfully!";
+        }
     }
-
-    stringStations.push_back(newStation);
-   
-  }
-  else
-  {
-    cout << "Invalid option. Try again.\n";
-  }
-
+    else
+    {
+        cout << "Invalid option. Try again.\n";
+    }
 }
 void R_Manager::scheduleTrain()
 {
@@ -396,8 +392,24 @@ void R_Manager::scheduleTrain()
                 cin >> pt_id;
                 cout << "Enter Train Name: ";
                 cin >> t_name;
-                cout << "Enter Train Timing (hh:mm): ";
-                cin >> timing;
+                try
+                {
+                    cout << "Enter Train Timing (hh:mm): ";
+                    cin >> timing;
+                    // Check if the entered time is in the correct format (hh:mm)
+                    if (timing.length() != 5 || timing[2] != ':' ||
+                        !isdigit(timing[0]) || !isdigit(timing[1]) ||
+                        !isdigit(timing[3]) || !isdigit(timing[4]))
+                    {
+                        throw invalid_argument("Invalid time format! Please enter the time as hh:mm.");
+                    }
+                }
+                catch (const invalid_argument &e)
+                {
+
+                    cout << e.what() << endl;
+                    return;
+                }
                 cout << "Is this a stopping train (1) or through train (0)? ";
                 cin >> stoppage;
 
@@ -425,7 +437,7 @@ void R_Manager::scheduleTrain()
                 cout << "Enter Train Name: ";
                 cin >> t_name;
                 try
-                {   
+                {
                     cout << "Enter Train Timing (hh:mm): ";
                     cin >> timing;
                     // Check if the entered time is in the correct format (hh:mm)
@@ -456,7 +468,6 @@ void R_Manager::scheduleTrain()
         cout << "No stations available or invalid option selected.\n";
     }
 }
-
 
 template class station<int>;
 template class station<string>;
