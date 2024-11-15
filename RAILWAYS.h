@@ -54,7 +54,7 @@ class station
   void printlines();
   
 
-  void alloc_ln_Plt(string ln_id,string pt_id);
+  int alloc_ln_Plt(string ln_id,string pt_id);
   void print_line_plt();
 
   void  schedule_train(string pt_id,string time,string tname,int stoppage);
