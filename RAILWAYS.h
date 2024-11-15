@@ -63,4 +63,17 @@ class station
 
 };
 
+
+class R_Manager
+{  private:
+   vector<station<int>> intStations;       
+   vector<station<string>> stringStations;
+
+   public: 
+   void viewStations();
+   void addStation();
+   void scheduleTrain();
+
+};
+
 #endif
